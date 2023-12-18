@@ -25,9 +25,38 @@ exports.getProducts = async (req, res, next) => {
     return next(err);
   }
 };
+
+// eslint-disable-next-line consistent-return
+exports.postForm = async (req, res, next) => {
+  const {
+    productId, fname, lname, email,
+  } = req.body;
+  // Trouver le produit par son ID
+  const product = await prisma.product.findUnique({
+    where: { id: Number(productId) },
+  });
+
+  if (!product) {
+    const err = throwError('Product not found', 404);
+    return next(err);
+  }
+  // Creer et  Enregistrer l'utilisateur dans la base de données
+  const user = await prisma.user.create({
+    data: {
+      fname,
+      lname,
+      email,
+      interestingProducts: {
+        connect: { id: product.id },
+      },
+    },
+  });
+  res.json(user);
+};
+
 exports.getProductFiltered = async (req, res, next) => {
   try {
-    console.log(req.query)
+    console.log(req.query);
     const { min, max } = req.query;
     console.log(min, 'minminn');
     if (!min && !max) {

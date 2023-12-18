@@ -8,11 +8,20 @@ datasource db {
 }
 
 model Product {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
-  active      Boolean @default(false)
-  thumbnail   String
-  packshot    String @default("/uploads/")
-  price       Decimal @default(0.00)
+  id                 Int                             @id @default(autoincrement())
+  name               String
+  description        String?
+  active             Boolean @default(false)
+  thumbnail          String
+  packshot           String @default("/uploads/")
+  price              Decimal @default(0.00)
+  interestedUser     User[]
 }
+
+model User {
+  id                    Int                       @id @default(autoincrement())
+  fname                 String
+  lname                 String
+  email                 String
+  interestingProducts   Product[]
+}  
